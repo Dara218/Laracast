@@ -4,7 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\File;
+use Spatie\YamlFrontMatter\YamlFrontMatter;
+
 class Post
 {
     use HasFactory;
@@ -24,22 +27,32 @@ class Post
 
     public static function all()
     {
-        $files = File::files(resource_path("posts"));
+        //add cache
+        return cache()->rememberForever('all.posts', function(){
+            return collect(File::files(resource_path("posts")))
+            ->map(fn($file)=>YamlFrontMatter::parseFile($file))
+            ->map(fn($document)=> new Post(
+                    $document->title,
+                    $document->excerpt,
+                    $document->date,
+                    $document->body(),
+                    $document->slug
+                ))->sortByDesc('date');
+        });
 
-        return array_map(function($file){
-            return $file->getContents();
-        }, $files);
+    }
+    public static function find($slug){
+       return static::all()->firstWhere('slug', $slug);
     }
 
-    public static function find($slug){
+    public static function findOrFail($slug){
+        $post = static::find($slug);
 
-        if(! file_exists($path = resource_path("posts/{$slug}.html")))
+        if(! $post)
         {
-            abort(404);
+            throw new ModelNotFoundException();
         }
 
-        return cache()->remember("post.{$slug}", 5 , function() use ($path){
-            return file_get_contents($path);
-        });
-    }
+        return $post;
+     }
 }

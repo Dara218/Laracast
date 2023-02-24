@@ -1,24 +1,24 @@
-@include('partials.header')
+@extends('layout')
 
-<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
-    <div class="d-flex flex-column justify-content-center align-items-center gap-3">
-      <div class="border col-6 p-4">
+@section('contents')
+<div class="d-flex justify-content-center align-items-center py-4">
+  <div class="d-flex flex-column justify-content-center align-items-center gap-3">
+    <div class="border col-6 p-4">
 
-       <?php foreach ($posts as $post) : ?>
+     @foreach ($posts as $post)
 
-        <a href="/posts/<?=$post->slug;?>">
-            <?= $post->title; ?>
-        </a>
+      <a href="/posts/{{ $post->slug }}" class="{{ $loop->even ? 'text-primary fs-3' : 'text-secondary fs-3' }}">
 
-        <p class="post-content">
-            <?= $post->body; ?>
-        </p>
+         {{ $post->title }}
+      </a>
 
-       <?php endforeach; ?>
+      <p class="post-content">
+          {!! $post->body !!}
+      </p>
 
-    </div>
+      @endforeach
+
   </div>
 </div>
-
-
-@include('partials.footer')
+</div>
+@endsection
