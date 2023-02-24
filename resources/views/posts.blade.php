@@ -7,7 +7,7 @@
 
      @foreach ($posts as $post)
 
-      <a href="/posts/{{ $post->slug }}" class="{{ $loop->even ? 'text-primary fs-3' : 'text-secondary fs-3' }}">
+      <a href="/posts/{{ $post->id }}" class="{{ $loop->even ? 'text-primary fs-3' : 'text-secondary fs-3' }}">
 
          {{ $post->title }}
       </a>
