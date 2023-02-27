@@ -7,6 +7,8 @@
 
             <x-post-grid :posts="$posts"/>
 
+            {{ $posts->links() }}
+
         @else
             {{--This will show if theres no post present--}}
             <div class="text-center">No post yet. Try adding some.</div>
