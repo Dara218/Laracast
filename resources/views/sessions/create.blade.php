@@ -1,15 +1,13 @@
 <x-layout>
     <section class="px-6 py-8">
         <main class="max-w-lg mx-auto">
-
-            <form action="/register" method="POST" class="mb-3 border d-flex flex-column">
+            <form action="/sessions" method="POST" class="mb-3 border d-flex flex-column">
                 @csrf
-                <h1 class="font-bold">Register</h1>
+                <h1 class="font-bold">Login</h1>
 
-                  <div class="d-flex flex-column">
-                    <label for="" class="form-label">Username</label>
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Enter your username" class="col-6" value="{{ old('username') }}">
-                  </div>
+                @if (session()->has('error'))
+                    <p class="text-danger">{{ session('error') }}</p>
+                @endif
 
                   @error('username')
                       <span class="bg-red-200">{{ $message }}</span>
@@ -36,7 +34,6 @@
                   <button type="submit" class="btn btn-primary bg-gray-200" name="submit-btn">Submit</button>
 
             </form>
-
         </main>
     </section>
 </x-layout>
